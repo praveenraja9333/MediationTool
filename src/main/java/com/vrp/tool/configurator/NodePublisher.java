@@ -28,16 +28,23 @@ public class NodePublisher implements Publisher<Node> {
 
     @Override
     public void removed(Node node) {
+        for(Listener listener: subscribers){
+            listener.onRemove(node);
+        }
 
     }
 
     @Override
-    public void removed(List<Node> T) {
-
+    public void removed(List<Node> nodes) {
+        for(Listener listener: subscribers) {
+            listener.onRemove(nodes);
+        }
     }
 
     @Override
-    public void published(List<Node> T) {
-
+    public void published(List<Node> nodes) {
+        for(Listener listener: subscribers) {
+            listener.onPublish(nodes);
+        }
     }
 }

@@ -4,7 +4,7 @@ public class JobBuilder implements Builder<JobBuilder>{
     int jobid;
     String dstIP;
     String dstPort;
-    String portocol;
+    String protocol;
     Node node;
     int cycles;
 
@@ -23,8 +23,8 @@ public class JobBuilder implements Builder<JobBuilder>{
         return this;
     }
 
-    public JobBuilder setPortocol(String portocol) {
-        this.portocol = portocol;
+    public JobBuilder setProtocol(String protocol) {
+        this.protocol = protocol;
         return this;
     }
 
@@ -50,7 +50,7 @@ public class JobBuilder implements Builder<JobBuilder>{
         job.setDstIP(jobBuilder.dstIP);
         job.setDstPort(jobBuilder.dstPort);
         job.setNode(jobBuilder.node);
-        job.setPortocol(jobBuilder.portocol);
+        job.setProtocol(jobBuilder.protocol);
         job.setCycles(jobBuilder.cycles);
         return job;
     }
