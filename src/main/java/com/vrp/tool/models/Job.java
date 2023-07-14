@@ -4,7 +4,7 @@ public class Job {
     int jobid;
     String dstIP;
     String dstPort;
-    String portocol;
+    String protocol;
     Node node;
 
     int cycles;
@@ -41,12 +41,12 @@ public class Job {
         this.dstPort = dstPort;
     }
 
-    public String getPortocol() {
-        return portocol;
+    public String getProtocol() {
+        return protocol;
     }
 
-    public void setPortocol(String portocol) {
-        this.portocol = portocol;
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
     }
 
     public Node getNode() {
@@ -67,7 +67,7 @@ public class Job {
         if (jobid != job.jobid) return false;
         if (!dstIP.equals(job.dstIP)) return false;
         if (!dstPort.equals(job.dstPort)) return false;
-        if (!portocol.equals(job.portocol)) return false;
+        if (!protocol.equals(job.protocol)) return false;
         return node.equals(job.node);
     }
 
@@ -76,7 +76,7 @@ public class Job {
         int result = jobid;
         result = 31 * result + dstIP.hashCode();
         result = 31 * result + dstPort.hashCode();
-        result = 31 * result + portocol.hashCode();
+        result = 31 * result + protocol.hashCode();
         result = 31 * result + node.hashCode();
         return result;
     }
