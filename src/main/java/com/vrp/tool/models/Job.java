@@ -7,7 +7,17 @@ public class Job {
     String protocol;
     Node node;
 
+    String cronPattern;
+
     int cycles;
+
+    public String getCronPattern() {
+        return cronPattern;
+    }
+
+    public void setCronPattern(String cronPattern) {
+        this.cronPattern = cronPattern;
+    }
 
     public int getCycles() {
         return cycles;
@@ -55,6 +65,12 @@ public class Job {
 
     public void setNode(Node node) {
         this.node = node;
+    }
+
+    @Override
+    public String toString(){
+        return jobid+ ":"+
+                dstIP+":"+dstPort+":"+node.getName();
     }
 
     @Override

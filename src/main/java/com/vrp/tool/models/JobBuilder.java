@@ -6,6 +6,7 @@ public class JobBuilder implements Builder<JobBuilder>{
     String dstPort;
     String protocol;
     Node node;
+    String cronPattern;
     int cycles;
 
     public JobBuilder setJobid(int jobid) {
@@ -25,6 +26,10 @@ public class JobBuilder implements Builder<JobBuilder>{
 
     public JobBuilder setProtocol(String protocol) {
         this.protocol = protocol;
+        return this;
+    }
+    public JobBuilder setCron(String cronPattern) {
+        this.cronPattern = cronPattern;
         return this;
     }
 
@@ -52,6 +57,7 @@ public class JobBuilder implements Builder<JobBuilder>{
         job.setNode(jobBuilder.node);
         job.setProtocol(jobBuilder.protocol);
         job.setCycles(jobBuilder.cycles);
+        job.setCronPattern(jobBuilder.cronPattern);
         return job;
     }
 
