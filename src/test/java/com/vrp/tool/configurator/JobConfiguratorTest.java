@@ -20,7 +20,6 @@ class JobConfiguratorTest {
     JobServiceFactory jobServiceFactory;
     @Test
     void parseNode() {
-
            jobConfigurator.parseNode(NodeBuilder.newBuilder().setName("CSSLTE").build());
            assertEquals(1,jobServiceFactory.getInstalledNodes().size());
            assertTrue(jobServiceFactory.getInstalledNodes().values().contains(NodeBuilder.newBuilder().setName("CSSLTE").build()));
@@ -39,7 +38,7 @@ class JobConfiguratorTest {
         jobConfigurator.parseJobs("/Users/praveenrajendran/Downloads/MediationTool/sample.txt");
         assertEquals(1,jobServiceFactory.getInstalledJobs().size());
         Job job = JobBuilder.newBuilder().setDstIP("127.0.0.1").setDstPort("1111").setNode(jobServiceFactory.getInstalledNodes()
-                .get("LTECSS3_1")).setPortocol("sftp").setJobid(1).build();
+                .get("LTECSS3_1")).setProtocol("sftp").setJobid(1).build();
         assertTrue(jobServiceFactory.getInstalledJobs().contains(job));
 
     }

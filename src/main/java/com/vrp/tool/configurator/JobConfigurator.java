@@ -116,7 +116,7 @@ public class JobConfigurator {
             return ;
         }
         Job job = JobBuilder.newBuilder().setDstIP(dstIP).setDstPort(dstPort).setNode(serviceFactory.getInstalledNodes()
-                .get(nodeName)).setPortocol(portocol).setJobid(Integer.parseInt(id)).build();
+                .get(nodeName)).setProtocol(portocol).setJobid(Integer.parseInt(id)).build();
         jobPublisher.published(job);
 
     }
