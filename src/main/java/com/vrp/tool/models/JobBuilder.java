@@ -38,10 +38,6 @@ public class JobBuilder implements Builder<JobBuilder>{
         return this;
     }
 
-    public JobBuilder setCycles(int cycles) {
-        this.cycles = cycles;
-        return this;
-    }
 
     public static JobBuilder newBuilder(){
         return new JobBuilder();
@@ -56,7 +52,6 @@ public class JobBuilder implements Builder<JobBuilder>{
         job.setDstPort(jobBuilder.dstPort);
         job.setNode(jobBuilder.node);
         job.setProtocol(jobBuilder.protocol);
-        job.setCycles(jobBuilder.cycles);
         job.setCronPattern(jobBuilder.cronPattern);
         return job;
     }

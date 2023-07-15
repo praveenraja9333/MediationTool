@@ -9,22 +9,12 @@ public class Job {
 
     String cronPattern;
 
-    int cycles;
-
     public String getCronPattern() {
         return cronPattern;
     }
 
     public void setCronPattern(String cronPattern) {
         this.cronPattern = cronPattern;
-    }
-
-    public int getCycles() {
-        return cycles;
-    }
-
-    public void setCycles(int cycles) {
-        this.cycles = cycles;
     }
 
     public int getJobid() {
@@ -84,7 +74,8 @@ public class Job {
         if (!dstIP.equals(job.dstIP)) return false;
         if (!dstPort.equals(job.dstPort)) return false;
         if (!protocol.equals(job.protocol)) return false;
-        return node.equals(job.node);
+        if (!node.equals(job.node)) return false;
+        return cronPattern.equals(job.cronPattern);
     }
 
     @Override
@@ -94,6 +85,7 @@ public class Job {
         result = 31 * result + dstPort.hashCode();
         result = 31 * result + protocol.hashCode();
         result = 31 * result + node.hashCode();
+        result = 31 * result + cronPattern.hashCode();
         return result;
     }
 }

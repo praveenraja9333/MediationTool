@@ -34,12 +34,24 @@ class JobConfiguratorTest {
 
     @Test
     void installJobs(){
-        jobConfigurator.installNode("/Users/praveenrajendran/Downloads/MediationTool/smaple.json");
-        jobConfigurator.parseJobs("/Users/praveenrajendran/Downloads/MediationTool/sample.txt");
+       // jobConfigurator.installNode("/Users/praveenrajendran/Downloads/MediationTool/smaple.json");
+        jobConfigurator.installNode("C:\\Users\\Praveen\\Downloads\\tool\\.tool\\smaple.json");
+       // jobConfigurator.parseJobs("/Users/praveenrajendran/Downloads/MediationTool/sample.txt");
+        jobConfigurator.parseJobs("C:\\Users\\Praveen\\Downloads\\tool\\.tool\\sample.txt");
         assertEquals(1,jobServiceFactory.getInstalledJobs().size());
         Job job = JobBuilder.newBuilder().setDstIP("127.0.0.1").setDstPort("1111").setNode(jobServiceFactory.getInstalledNodes()
                 .get("LTECSS3_1")).setProtocol("sftp").setJobid(1).build();
         assertTrue(jobServiceFactory.getInstalledJobs().contains(job));
-
+    }
+    @Test
+    void installJobs_cronPatterns(){
+        // jobConfigurator.installNode("/Users/praveenrajendran/Downloads/MediationTool/smaple.json");
+        jobConfigurator.installNode("C:\\Users\\Praveen\\Downloads\\tool\\.tool\\smaple.json");
+        // jobConfigurator.parseJobs("/Users/praveenrajendran/Downloads/MediationTool/sample.txt");
+        jobConfigurator.parseJobs("C:\\Users\\Praveen\\Downloads\\tool\\.tool\\sample.txt");
+        assertEquals(1,jobServiceFactory.getInstalledJobs().size());
+        Job job = JobBuilder.newBuilder().setDstIP("127.0.0.1").setDstPort("1111").setNode(jobServiceFactory.getInstalledNodes()
+                .get("LTECSS3_1")).setProtocol("sftp").setCron("* 5,15 * * * MON-FRI").setJobid(1).build();
+        assertTrue(jobServiceFactory.getInstalledJobs().contains(job));
     }
 }

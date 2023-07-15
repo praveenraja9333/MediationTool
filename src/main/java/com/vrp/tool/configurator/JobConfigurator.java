@@ -38,13 +38,13 @@ public class JobConfigurator {
                                                             "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
     private static Pattern PORTPATTERN=Pattern.compile("^[1-6]?[1-9]{1,5}");
 
-    private static Pattern CRONPATTERN=Pattern.compile("^\\*|[0-5]?[0-9]|\\*/[0-5]?[0-9]\\s"+
-                                                             "\\*|[0-5]?[0-9]|\\*/[0-5]?[0-9]\\s"+
-                                                            "\\*|[0-1]?[0-9]|2[0-3]|\\*/2[0-3]|\\*/[0-1]?[0-9]|\\?\\s"+
-                                                            "\\*|[0-2]?[0-9]|3[0-1]|\\*/3[0-1]|\\*/[0-2]?[0-9]\\s"+
-                                                             "\\*|[a-zA-Z]{3}-[a-zA-Z]{3}|[0-7]-[0-7]\\s"+
-                                                            "\\*|[a-zA-Z]{3}-[a-zA-Z]{3}|[0-12]-[0-12]\\s?"+
-                                                                "[0-9]{0,4}");
+    private static Pattern CRONPATTERN = Pattern.compile("^(\\*|[0-5]?[0-9]|0\\/[0-5]?[0-9]|[0-5]?[0-8](\\-|,)[0-5]?[0-9])\\s" +
+            "(\\*|[0-5]?[0-9]|0\\/[0-5]?[0-9]|[0-5]?[0-8](\\-|,)[0-5]?[0-9]|)\\s" +
+            "(\\*|[0-1]?[0-9]|2[0-3]|0\\/2[0-3]|0\\/[0-1]?[0-9]|[0-1]?[0-9]\\-[0-1]?[0-9]|[0-2]?[0-3](\\-|,)[0-2]?[0-3]|\\??)\\s" +
+            "(\\*|[0-2]?[0-9]|3[0-1]|0\\/3[0-1]|0\\/[0-2]?[0-9]|[0-2]?[0-9]\\-[0-2]?[0-9]|[0-3]?[0-1](\\-|,)[0-3]?[0-1])\\s" +
+            "(\\*|[a-zA-Z]{3}\\-[a-zA-Z]{3}|[0-7](\\-|,)[0-7])\\s" +
+            "(\\*|[a-zA-Z]{3}\\-[a-zA-Z]{3}|[0-9](\\-|,)[0-9]|[0-1]?[0-2](\\-|,)[0-1]?[0-2])\\s?" +
+            "([0-9]{0,4})");
     private static int BUFFER_SIZE=65536;
 
 
@@ -110,7 +110,7 @@ public class JobConfigurator {
         String dstPort=requireNonNull(fields[2]);
         String portocol=requireNonNull(fields[3]);
         String nodeName=requireNonNull(fields[4]);
-        String cronexpression=requireNonNull(fields[5]);
+        String cronexpression=requireNonNull(fields[5]).replace('.',',');
 
         if(!serviceFactory.getInstalledNodes().containsKey(nodeName)){
             LOG.info("Node not installed .Please install node %s before configuring job {}",nodeName);
@@ -129,7 +129,7 @@ public class JobConfigurator {
             return;
         }
         Job job = JobBuilder.newBuilder().setDstIP(dstIP).setDstPort(dstPort).setNode(serviceFactory.getInstalledNodes()
-                .get(nodeName)).setProtocol(portocol).setJobid(Integer.parseInt(id)).build();
+                .get(nodeName)).setProtocol(portocol).setCron(cronexpression).setJobid(Integer.parseInt(id)).build();
         jobPublisher.published(job);
 
     }
