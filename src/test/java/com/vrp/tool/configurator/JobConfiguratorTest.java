@@ -21,6 +21,12 @@ class JobConfiguratorTest {
 
            jobConfigurator.parseNode(NodeBuilder.newBuilder().setName("CSSLTE").build());
            assertEquals(1,jobServiceFactory.getInstalledNodes().size());
-           assertTrue(jobServiceFactory.getInstalledNodes().contains(NodeBuilder.newBuilder().setName("CSSLTE").build()));
+           assertTrue(jobServiceFactory.getInstalledNodes().values().contains(NodeBuilder.newBuilder().setName("CSSLTE").build()));
+    }
+    @Test
+    void installNode(){
+        jobConfigurator.installNode("/Users/praveenrajendran/Downloads/MediationTool/smaple.json");
+        assertEquals(1,jobServiceFactory.getInstalledNodes().size());
+        assertTrue(jobServiceFactory.getInstalledNodes().values().contains(NodeBuilder.newBuilder().setName("LTECSS3_1").build()));
     }
 }
