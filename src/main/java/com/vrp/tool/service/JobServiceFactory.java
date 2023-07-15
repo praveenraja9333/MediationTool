@@ -16,6 +16,10 @@ public class JobServiceFactory {
     public Map<String,Node> getInstalledNodes() {
         return installedNodes;
     }
+    public Set<Job> getInstalledJobs(){
+        return installedJobs;
+    }
+
 
     public final Listener<Node> nodesListener = new Listener<Node>() {
         @Override

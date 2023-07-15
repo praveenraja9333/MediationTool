@@ -1,6 +1,8 @@
 package com.vrp.tool.configurator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vrp.tool.models.Job;
+import com.vrp.tool.models.JobBuilder;
 import com.vrp.tool.models.Node;
 import com.vrp.tool.service.JobServiceFactory;
 import org.apache.logging.log4j.LogManager;
@@ -9,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.Objects.requireNonNull;
 
 @Component
 @Primary
@@ -26,7 +31,13 @@ public class JobConfigurator {
     private NodePublisher nodePublisher;
     private static Logger LOG= LogManager.getLogger(JobConfigurator.class);
 
-    private static Pattern pattern= Pattern.compile(".*\\.json");
+    private static Pattern PATTERN= Pattern.compile(".*\\.json");
+    private static Pattern IPPATTERN=Pattern.compile("^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+                                                            "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+                                                            "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." +
+                                                            "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+    private static Pattern PORTPATTERN=Pattern.compile("^[1-6]?[1-9]{1,5}");
+    private static int BUFFER_SIZE=65536;
 
 
     public void addSubscribers(){
@@ -40,7 +51,7 @@ public class JobConfigurator {
     }
 
     public void installNode(String fileName){
-        Matcher matcher=pattern.matcher(fileName);
+        Matcher matcher=PATTERN.matcher(fileName);
         System.out.println(matcher.matches());
         if(!matcher.matches()){
             LOG.info("Provide file name %s is not json file",fileName);
@@ -54,5 +65,68 @@ public class JobConfigurator {
             throw new RuntimeException(e);
         }
     }
+
+    public void parseJobs(String fileName){
+        try (BufferedInputStream br=new BufferedInputStream(new FileInputStream(fileName))){
+            String lines="";
+            lines=readLines(br);
+            int index=-1;
+            while(lines.length()>0){
+                index=lines.indexOf('\n');
+                if(index>0){
+                    installJobs(lines.substring(0,index));
+                    if(!(lines.length()==(index+1))) lines=lines.substring((index+1));
+                    else lines =readLines(br);
+                }else{
+                    int before=lines.length();
+                    lines +=readLines(br);
+                    if(before==lines.length()){
+                        installJobs(lines);
+                        lines="";
+                    }
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void installJobs(String line){
+        LOG.info(line);
+        String[] fields=line.trim().split(",");
+        String id=requireNonNull(fields[0]);
+        String dstIP=requireNonNull(fields[1]);
+        String dstPort=requireNonNull(fields[2]);
+        String portocol=requireNonNull(fields[3]);
+        String nodeName=requireNonNull(fields[4]);
+
+        if(!serviceFactory.getInstalledNodes().containsKey(nodeName)){
+            LOG.info("Node not installed .Please install node %s before configuring job {}",nodeName);
+            return;
+        }
+        if(!IPPATTERN.matcher(dstIP).matches()){
+            LOG.info("Not a valid IP {}",dstIP);
+            return;
+        }
+        if(!PORTPATTERN.matcher(dstPort).matches()){
+            LOG.info("Not a valid Port {}",dstPort);
+            return ;
+        }
+        Job job = JobBuilder.newBuilder().setDstIP(dstIP).setDstPort(dstPort).setNode(serviceFactory.getInstalledNodes()
+                .get(nodeName)).setPortocol(portocol).setJobid(Integer.parseInt(id)).build();
+        jobPublisher.published(job);
+
+    }
+
+    public String readLines(InputStream in) throws IOException {
+        byte[] bytes=new byte[BUFFER_SIZE];
+        int readcount=in.read(bytes);
+
+        return readcount==-1?"":new String(Arrays.copyOf(bytes,readcount));
+    }
+
     
 }

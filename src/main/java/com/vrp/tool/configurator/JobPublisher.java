@@ -14,26 +14,36 @@ public class JobPublisher implements Publisher<Job> {
     List<Listener> subcribers=new LinkedList<>();
     public boolean addSubscribers(Listener listener){
         if(subcribers.contains(listener))return false;
+        subcribers.add(listener);
         return true;
     }
 
     @Override
     public void published(Job job) {
+        for(Listener listener:subcribers){
+            listener.onPublish(job);
+        }
 
     }
 
     @Override
     public void removed(Job job) {
-
+        for(Listener listener:subcribers){
+            listener.onRemove(job);
+        }
     }
 
     @Override
-    public void removed(List<Job> T) {
-
+    public void removed(List<Job> jobs) {
+        for(Listener listener:subcribers){
+            listener.onRemove(jobs);
+        }
     }
 
     @Override
-    public void published(List<Job> T) {
-
+    public void published(List<Job> jobs) {
+        for(Listener listener:subcribers){
+            listener.onPublish(jobs);
+        }
     }
 }

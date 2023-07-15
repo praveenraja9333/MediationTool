@@ -38,12 +38,17 @@ public class JobBuilder implements Builder<JobBuilder>{
         return this;
     }
 
+    public static JobBuilder newBuilder(){
+        return new JobBuilder();
+    }
+
 
     @Override
     public Job build(JobBuilder jobBuilder) {
         Job job=new Job();
         job.setJobid(jobBuilder.jobid);
         job.setDstIP(jobBuilder.dstIP);
+        job.setDstPort(jobBuilder.dstPort);
         job.setNode(jobBuilder.node);
         job.setPortocol(jobBuilder.portocol);
         job.setCycles(jobBuilder.cycles);
@@ -51,7 +56,7 @@ public class JobBuilder implements Builder<JobBuilder>{
     }
 
     @Override
-    public Object build() {
+    public Job build() {
         return build(this);
     }
 }
