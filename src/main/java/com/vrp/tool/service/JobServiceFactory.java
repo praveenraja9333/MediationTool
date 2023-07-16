@@ -60,7 +60,9 @@ public class JobServiceFactory {
         @Override
         public void onPublish(Job node) {
             installedJobs.add(node);
-            //addJob
+            for(Listener listener:subscribers){
+                listener.onPublish(node);
+            }
         }
 
         @Override

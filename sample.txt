@@ -1,2 +1,2 @@
 ID,destinationIP,destinationPort,protocol,installnode,cron
-1,127.0.0.1,1111,sftp,LTECSS3_1,* 5.15 * * * MON-FRI
+1,127.0.0.1,1111,sftp,LTECSS3_1,0 0/3 * * * ?

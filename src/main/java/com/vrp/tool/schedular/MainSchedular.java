@@ -37,17 +37,16 @@ public class MainSchedular  {
     Listener joblistener= new Listener<Job>() {
         @Override
         public void onPublish(Job job) {
-            org.quartz.JobDetail jobDetail= JobBuilder.newJob(RunnableJob.class).withIdentity(job.toString(),"group1")
+            org.quartz.JobDetail jobDetail = JobBuilder.newJob(RunnableJob.class).withIdentity(job.toString(), "group1")
                     .build();
-            jobDetail.getJobDataMap().put("jobDetail",job);
-            Trigger trigger= TriggerBuilder.newTrigger().withIdentity(job.toString()+":t","group1").startNow()
+            jobDetail.getJobDataMap().put("jobDetail", job);
+            Trigger trigger = TriggerBuilder.newTrigger().withIdentity(job.toString() + ":t", "group1").startNow()
                     .withSchedule(CronScheduleBuilder.cronSchedule(job.getCronPattern())).build();
             try {
-                schedular.scheduleJob(jobDetail,trigger);
+                schedular.scheduleJob(jobDetail, trigger);
             } catch (SchedulerException e) {
                 throw new RuntimeException(e);
             }
-
         }
 
         @Override
