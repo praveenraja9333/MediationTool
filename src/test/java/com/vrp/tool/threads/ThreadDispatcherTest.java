@@ -13,6 +13,7 @@ class ThreadDispatcherTest {
     private static ThreadDispatcher threadDispatcher;
     @BeforeAll
     private static void setUp(){
+        System.setProperty("max_SFTPThread","10");
         threadDispatcher=new ThreadDispatcher();
     }
     @Test
@@ -27,8 +28,12 @@ class ThreadDispatcherTest {
 
     @Test
     void consume_withSize() {
-        List<SFTPThread> threads=threadDispatcher.consume(6);
-        assertEquals(5,threads.size());
+        List<SFTPThread> threads=threadDispatcher.consume(3);
+        List<SFTPThread> threads1=threadDispatcher.consume(3);
+        List<SFTPThread> threads2=threadDispatcher.consume(5);
+        assertEquals(3,threads.size());
+        assertEquals(3,threads1.size());
+        assertEquals(5,threads2.size());
     }
 
     @Test

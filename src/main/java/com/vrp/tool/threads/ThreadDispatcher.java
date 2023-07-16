@@ -100,10 +100,12 @@ public class ThreadDispatcher {
             int limit=0;
             if(wantedCount>availableSize){
                 int diff=Math.abs(wantedCount-availableSize);
-                if(sftpthreadssize+diff<=MAX_THREADS){
-                    produce(diff);
-                }else if(sftpthreadssize+1<MAX_THREADS){
-                    produce(1);
+                while(diff>0) {
+                    if (sftpthreadssize + diff <= MAX_THREADS) {
+                        produce(diff);
+                        break;
+                    }
+                    diff--;
                 }
                 limit=availableSize;
             }else{
