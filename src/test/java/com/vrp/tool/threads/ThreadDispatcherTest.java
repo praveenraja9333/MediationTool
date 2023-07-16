@@ -27,7 +27,7 @@ class ThreadDispatcherTest {
 
     @Test
     void consume_withSize() {
-        List<SFTPThread> threads=threadDispatcher.consume(5);
+        List<SFTPThread> threads=threadDispatcher.consume(6);
         assertEquals(5,threads.size());
     }
 
