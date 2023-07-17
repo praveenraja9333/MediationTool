@@ -11,6 +11,8 @@ public class SFTPThread extends Thread{
     private static Logger LOG= LogManager.getLogger(SFTPThread.class);
     private volatile Job job;
 
+    private boolean registered=true;
+
     private volatile Set<File> files;
 
     private ThreadDispatcher.CacheTable cacheTable;
@@ -31,6 +33,18 @@ public class SFTPThread extends Thread{
     public void run(){
         //Fetch File Logic
         while(true){
+            if(job==null&&!registered){
+                register();
+            }
+            while(job==null){
+                try {
+                    LOG.info("No Job is scheduled for the Thread {},Hence sleeping",this.getName());
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            registered=false;
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
@@ -42,6 +56,7 @@ public class SFTPThread extends Thread{
 
     public void register(){
         cacheTable.register(this);
+        registered=true;
     }
     public void setFiles(Set<File> files) {
         this.files = files;

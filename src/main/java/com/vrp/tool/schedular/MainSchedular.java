@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class MainSchedular  {
@@ -21,9 +22,9 @@ public class MainSchedular  {
     private SchedulerFactory schedularFactory;
     private Scheduler schedular;
 
-    public Map<String, TreeSet<Object>>collectedFiles=new HashMap<>();
+    public Map<String, Set<File>>collectedFiles=new ConcurrentHashMap<>();
 
-    private Comparator<Object> comparator=(f,ff)->Long.compare(((File) f).getId(),((File) ff).getId());
+    private Comparator<File> comparator=(f,ff)->Long.compare( f.getId(),ff.getId());
 
 
     @PostConstruct
@@ -42,12 +43,13 @@ public class MainSchedular  {
     Listener joblistener= new Listener<Job>() {
         @Override
         public void onPublish(Job job) {
-            TreeSet<Object> set=collectedFiles.getOrDefault(job.toString(),new TreeSet<>(comparator)) ;
+            Set<File> set=collectedFiles.getOrDefault(job.toString(),new HashSet<>()) ;
             collectedFiles.put(job.toString(),set);
             org.quartz.JobDetail jobDetail = JobBuilder.newJob(RunnableJob.class).withIdentity(job.toString(), "group1")
                     .build();
             jobDetail.getJobDataMap().put("jobDetail", job);
             jobDetail.getJobDataMap().put("alreadyCollected",set);
+            jobDetail.getJobDataMap().put("schedular",schedular);
             Trigger trigger = TriggerBuilder.newTrigger().withIdentity(job.toString() + ":t", "group1").startNow()
                     .withSchedule(CronScheduleBuilder.cronSchedule(job.getCronPattern())).build();
             try {

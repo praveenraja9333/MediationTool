@@ -7,9 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,16 +18,20 @@ class MainSchedularTest {
 
     @Autowired
     MainSchedular mainSchedular;
-    @Test
-    public void test_TreeSet(){
-            Comparator<Object> comparator=(f, ff)->Long.compare(((File) f).getId(),((File) ff).getId());
-            TreeSet<Object> t=mainSchedular.collectedFiles.getOrDefault("1",new TreeSet<>(
-                    )
-            );
-            HashSet<Object> set=new HashSet<>();
-            t.add("name1".equals());
-            assertTrue(set.contains(new File("name1",1)));
 
+
+    @Test
+    public void test_Set() {
+        Comparator<File> comparator = (f, ff) -> Long.compare(f.getId(), ff.getId());
+        Set<File> t = mainSchedular.collectedFiles.getOrDefault("1", new HashSet<>());
+        t.add(new File("name3", 3));
+        t.add(new File("name10", 10));
+        t.add(new File("name2", 2));
+        t.add(new File("name1", 1));
+        File f1 = new File("dummy", 11);
+        assertFalse(t.contains(f1));
+        f1.setName("name1");
+        assertTrue(t.contains(f1));
     }
 
 }

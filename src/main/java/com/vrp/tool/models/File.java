@@ -35,7 +35,7 @@ public class File implements Serializable,Comparable {
         if (o == null) return false;
         if(o instanceof String)return ((String)o).equals(name);
         File file = (File) o;
-        return Objects.equals(name, file.name);
+        return name.equals(((File) o).name);
     }
 
     @Override
@@ -44,14 +44,24 @@ public class File implements Serializable,Comparable {
     }
 
     @Override
+    public String toString(){
+        return name+"@"+id;
+    }
+
+    @Override
     public int compareTo(Object o) {
-        if(o==null)return 1;
-        if(this==o)return 0;
-        if(o instanceof String){
+        if (o == null) return 1;
+        if (this == o) return 0;
+        if (o instanceof String) {
             return this.name.compareTo((String) o);
         }
-        if(o instanceof File)
-            return this.name.compareTo(((File) o).name);
-        return 1;
+        int returnval=1;
+        if (o instanceof File){
+            returnval=Long.compare(id, ((File) o).getId());
+            if ( returnval== 0) {
+                return Integer.compare(name.length(), ((File) o).name.length());
+            }
+        }
+        return returnval;
     }
 }
