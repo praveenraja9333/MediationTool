@@ -1,12 +1,18 @@
 package com.vrp.tool.threads;
 
+import com.vrp.tool.models.File;
 import com.vrp.tool.models.Job;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Set;
+
 public class SFTPThread extends Thread{
     private static Logger LOG= LogManager.getLogger(SFTPThread.class);
-    private Job job;
+    private volatile Job job;
+
+    private volatile Set<File> files;
+
     private ThreadDispatcher.CacheTable cacheTable;
 
     public Job getJob() {
@@ -36,6 +42,9 @@ public class SFTPThread extends Thread{
 
     public void register(){
         cacheTable.register(this);
+    }
+    public void setFiles(Set<File> files) {
+        this.files = files;
     }
 
 }

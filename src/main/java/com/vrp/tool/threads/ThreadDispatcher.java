@@ -56,7 +56,7 @@ public class ThreadDispatcher {
         }
     }
 
-    public synchronized void produce(int count) {
+    public  void produce(int count) {
         try {
             lock.lockInterruptibly();
             IntStream.range(sftpthreadssize, sftpthreadssize + count).forEach(i -> {
@@ -107,11 +107,11 @@ public class ThreadDispatcher {
                     }
                     diff--;
                 }
-                limit=availableSize;
+                limit=Math.min(availableSize,wantedCount);
             }else{
                 limit=wantedCount;
             }
-            List<SFTPThread> returnThreads = availableThreads.stream().limit(wantedCount).collect(Collectors.toList());
+            List<SFTPThread> returnThreads = availableThreads.stream().limit(limit).collect(Collectors.toList());
             availableThreads.removeAll(returnThreads);
             availableSize -= limit;
             return returnThreads;

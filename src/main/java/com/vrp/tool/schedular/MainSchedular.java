@@ -1,6 +1,7 @@
 package com.vrp.tool.schedular;
 
 import com.vrp.tool.flow.listeners.Listener;
+import com.vrp.tool.models.File;
 import com.vrp.tool.models.Job;
 import com.vrp.tool.service.JobServiceFactory;
 import com.vrp.tool.service.RunnableJob;
@@ -9,7 +10,7 @@ import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.*;
 
 @Component
 public class MainSchedular  {
@@ -19,6 +20,8 @@ public class MainSchedular  {
     @Autowired
     private SchedulerFactory schedularFactory;
     private Scheduler schedular;
+
+    public Map<String, TreeSet<File>>collectedFiles=new HashMap<>();
 
 
     @PostConstruct
@@ -37,9 +40,14 @@ public class MainSchedular  {
     Listener joblistener= new Listener<Job>() {
         @Override
         public void onPublish(Job job) {
+            TreeSet<File> set=collectedFiles.getOrDefault(job.toString(),new TreeSet<>(
+                    (  f, ff)->Long.compare(f.getId(), ff.getId()))
+            );
+            collectedFiles.put(job.toString(),set);
             org.quartz.JobDetail jobDetail = JobBuilder.newJob(RunnableJob.class).withIdentity(job.toString(), "group1")
                     .build();
             jobDetail.getJobDataMap().put("jobDetail", job);
+            jobDetail.getJobDataMap().put("alreadyCollected",set);
             Trigger trigger = TriggerBuilder.newTrigger().withIdentity(job.toString() + ":t", "group1").startNow()
                     .withSchedule(CronScheduleBuilder.cronSchedule(job.getCronPattern())).build();
             try {
