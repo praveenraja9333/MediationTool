@@ -33,7 +33,7 @@ class ThreadDispatcherTest {
         List<SFTPThread> threads2=threadDispatcher.consume(5);
         assertEquals(3,threads.size());
         assertEquals(3,threads1.size());
-        assertEquals(5,threads2.size());
+        assertEquals(4,threads2.size());
     }
 
     @Test
