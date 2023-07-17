@@ -21,7 +21,9 @@ public class MainSchedular  {
     private SchedulerFactory schedularFactory;
     private Scheduler schedular;
 
-    public Map<String, TreeSet<File>>collectedFiles=new HashMap<>();
+    public Map<String, TreeSet<Object>>collectedFiles=new HashMap<>();
+
+    private Comparator<Object> comparator=(f,ff)->Long.compare(((File) f).getId(),((File) ff).getId());
 
 
     @PostConstruct
@@ -40,9 +42,7 @@ public class MainSchedular  {
     Listener joblistener= new Listener<Job>() {
         @Override
         public void onPublish(Job job) {
-            TreeSet<File> set=collectedFiles.getOrDefault(job.toString(),new TreeSet<>(
-                    (  f, ff)->Long.compare(f.getId(), ff.getId()))
-            );
+            TreeSet<Object> set=collectedFiles.getOrDefault(job.toString(),new TreeSet<>(comparator)) ;
             collectedFiles.put(job.toString(),set);
             org.quartz.JobDetail jobDetail = JobBuilder.newJob(RunnableJob.class).withIdentity(job.toString(), "group1")
                     .build();

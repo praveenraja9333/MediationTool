@@ -33,7 +33,7 @@ public class File implements Serializable,Comparable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
-        if(o instanceof String)return Objects.equals(name,o);
+        if(o instanceof String)return ((String)o).equals(name);
         File file = (File) o;
         return Objects.equals(name, file.name);
     }
