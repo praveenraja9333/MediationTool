@@ -2,6 +2,8 @@ package com.vrp.tool.models;
 
 public class JobBuilder implements Builder<JobBuilder>{
     int jobid;
+
+    String username;
     String dstIP;
     String dstPort;
     String protocol;
@@ -11,6 +13,11 @@ public class JobBuilder implements Builder<JobBuilder>{
 
     public JobBuilder setJobid(int jobid) {
         this.jobid = jobid;
+        return this;
+    }
+
+    public JobBuilder setUserName(String userName){
+        this.username=userName;
         return this;
     }
 
@@ -48,6 +55,7 @@ public class JobBuilder implements Builder<JobBuilder>{
     public Job build(JobBuilder jobBuilder) {
         Job job=new Job();
         job.setJobid(jobBuilder.jobid);
+        job.setUsername(jobBuilder.username);
         job.setDstIP(jobBuilder.dstIP);
         job.setDstPort(jobBuilder.dstPort);
         job.setNode(jobBuilder.node);

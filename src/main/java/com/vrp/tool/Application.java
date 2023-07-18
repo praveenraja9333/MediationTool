@@ -17,8 +17,10 @@ public class Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		   jobConfigurator.addSubscribers();
-		  // jobConfigurator.installNode("/Users/praveenrajendran/Downloads/MediationTool/smaple.json");
+		 // jobConfigurator.installNode("/Users/praveenrajendran/Downloads/MediationTool/smaple.json");
 		  // jobConfigurator.parseJobs("/Users/praveenrajendran/Downloads/MediationTool/sample.txt");
+		jobConfigurator.installNode("C:\\Users\\Praveen\\Downloads\\tool\\.tool\\smaple.json");
+		jobConfigurator.parseJobs("C:\\Users\\Praveen\\Downloads\\tool\\.tool\\sample.txt");
 
 	}
 }

@@ -7,10 +7,14 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import java.util.Set;
 
+@Configurable
 public class RunnableJob implements Job {
+
     private static Logger LOG= LogManager.getLogger(RunnableJob.class);
     private volatile int sequence=0;
     @Override

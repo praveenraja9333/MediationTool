@@ -106,16 +106,14 @@ public class JobConfigurator {
         LOG.info(line);
         String[] fields=line.trim().split(",");
         String id=requireNonNull(fields[0]);
-        String dstIP=requireNonNull(fields[1]);
-        String dstPort=requireNonNull(fields[2]);
-        String portocol=requireNonNull(fields[3]);
-        String nodeName=requireNonNull(fields[4]);
-        String cronexpression=requireNonNull(fields[5]).replace('.',',');
+        String username=requireNonNull(fields[1]);
+        String dstIP=requireNonNull(fields[2]);
+        String dstPort=requireNonNull(fields[3]);
+        String portocol=requireNonNull(fields[4]);
+        String nodeNames=requireNonNull(fields[5]);
+        String cronexpression=requireNonNull(fields[6]).replace('.',',');
 
-        if(!serviceFactory.getInstalledNodes().containsKey(nodeName)){
-            LOG.info("Node not installed .Please install node %s before configuring job {}",nodeName);
-            return;
-        }
+
         if(!IPPATTERN.matcher(dstIP).matches()){
             LOG.info("Not a valid IP {}",dstIP);
             return;
@@ -128,9 +126,15 @@ public class JobConfigurator {
             LOG.info("Not a valid cronexpression {}"+cronexpression);
             return;
         }
-        Job job = JobBuilder.newBuilder().setDstIP(dstIP).setDstPort(dstPort).setNode(serviceFactory.getInstalledNodes()
-                .get(nodeName)).setProtocol(portocol).setCron(cronexpression).setJobid(Integer.parseInt(id)).build();
-        jobPublisher.published(job);
+        for(String nodeName:nodeNames.split(":")) {
+            if(!serviceFactory.getInstalledNodes().containsKey(nodeName)){
+                LOG.info("Node not installed .Please install node %s before configuring job {}",nodeName);
+                continue;
+            }
+            Job job = JobBuilder.newBuilder().setDstIP(dstIP).setDstPort(dstPort).setNode(serviceFactory.getInstalledNodes()
+                    .get(nodeName)).setProtocol(portocol).setUserName(username).setCron(cronexpression).setJobid(Integer.parseInt(id)).build();
+            jobPublisher.published(job);
+        }
 
     }
 

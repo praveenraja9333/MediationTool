@@ -2,6 +2,7 @@ package com.vrp.tool.models;
 
 public class Job {
     int jobid;
+    String username;
     String dstIP;
     String dstPort;
     String protocol;
@@ -57,6 +58,14 @@ public class Job {
         this.node = node;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
     public String toString(){
         return jobid+ ":"+
@@ -75,6 +84,7 @@ public class Job {
         if (!dstPort.equals(job.dstPort)) return false;
         if (!protocol.equals(job.protocol)) return false;
         if (!node.equals(job.node)) return false;
+        if (!username.equals(job.username)) return false;
         return cronPattern.equals(job.cronPattern);
     }
 
@@ -86,6 +96,7 @@ public class Job {
         result = 31 * result + protocol.hashCode();
         result = 31 * result + node.hashCode();
         result = 31 * result + cronPattern.hashCode();
+        result = 31 * result + username.hashCode();
         return result;
     }
 }

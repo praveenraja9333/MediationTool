@@ -38,7 +38,7 @@ public class SFTPThread extends Thread{
             }
             while(job==null){
                 try {
-                    LOG.info("No Job is scheduled for the Thread {},Hence sleeping",this.getName());
+                    //LOG.info("No Job is scheduled for the Thread {},Hence sleeping",this.getName());
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
