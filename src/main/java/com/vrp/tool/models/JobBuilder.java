@@ -9,6 +9,7 @@ public class JobBuilder implements Builder<JobBuilder>{
     String protocol;
     Node node;
     String cronPattern;
+    String key;
     int cycles;
 
     public JobBuilder setJobid(int jobid) {
@@ -35,8 +36,14 @@ public class JobBuilder implements Builder<JobBuilder>{
         this.protocol = protocol;
         return this;
     }
+
     public JobBuilder setCron(String cronPattern) {
         this.cronPattern = cronPattern;
+        return this;
+    }
+
+    public JobBuilder setKey(String key) {
+        this.key = key;
         return this;
     }
 
@@ -61,6 +68,7 @@ public class JobBuilder implements Builder<JobBuilder>{
         job.setNode(jobBuilder.node);
         job.setProtocol(jobBuilder.protocol);
         job.setCronPattern(jobBuilder.cronPattern);
+        job.setKey(jobBuilder.key);
         return job;
     }
 

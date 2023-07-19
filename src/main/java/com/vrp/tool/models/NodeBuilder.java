@@ -5,6 +5,9 @@ public class NodeBuilder implements Builder<NodeBuilder>{
     String srcDirectory;
     String dstDirectory;
 
+    String fileregex;
+    int maxworkers;
+
     public NodeBuilder setName(String name) {
         this.name = name;
         return this;
@@ -17,6 +20,15 @@ public class NodeBuilder implements Builder<NodeBuilder>{
 
     public NodeBuilder setDstDirectory(String dstDirectory) {
         this.dstDirectory = dstDirectory;
+        return this;
+    }
+    public NodeBuilder setFileRegex(String fileregexegex) {
+        this.fileregex = fileregex;
+        return this;
+    }
+
+    public NodeBuilder setFileRegex(int maxworkers) {
+        this.maxworkers = maxworkers;
         return this;
     }
 
@@ -36,6 +48,8 @@ public class NodeBuilder implements Builder<NodeBuilder>{
         node.setName(nodeBuilder.name);
         node.setSrcDirectory(nodeBuilder.srcDirectory);
         node.setDstDirectory(nodeBuilder.dstDirectory);
+        node.setFileregex(nodeBuilder.fileregex);
+        node.setMaxworkers(node.getMaxworkers());
         return node;
     }
 

@@ -16,23 +16,7 @@ public class SFTPUtil {
     private SFTPUtil(){}
 
     public static ChannelSftp getChanneSftp(String username, String remotehost) {
-        JSch jSch = new JSch();
-        String known_hosts=System.getProperty("knownHosts");
-        if(known_hosts==null||"".equals(known_hosts)) {
-            String os = System.getProperty("os.name");
-            try {
-                if (os.contains("Windows")) {
-                   // String privatekey=getPrivateKey("C:\\Users\\Praveen\\.ssh\\id_rsa");
-                    jSch.addIdentity("C:\\Users\\Praveen\\jsch\\id_rsa");
-                    jSch.setKnownHosts("C:\\Users\\Praveen\\.ssh\\known_hosts");
-                }
-                else if (os.contains("linux")) {
-                    jSch.setKnownHosts("/home/praveen/.ssh/known_hosts");
-                }
-            }catch (JSchException j ){
-                j.printStackTrace();
-            }
-        }
+        JSch jSch = getJsch(null);
         Session jSchSession = null;
         try {
             jSchSession = jSch.getSession(username, remotehost);
@@ -44,20 +28,7 @@ public class SFTPUtil {
         }
     }
     public static ChannelSftp getChanneSftp(String username, String remotehost,String privateKey) {
-        JSch jSch = new JSch();
-        String known_hosts=System.getProperty("knownHosts");
-        if(known_hosts==null||"".equals(known_hosts)) {
-            String os = System.getProperty("os.name");
-            try {
-                if (os.contains("Windows"))
-                    jSch.setKnownHosts("C:\\Users\\Praveen\\.ssh\\known_hosts");
-                else if (os.contains("linux")) {
-                    jSch.setKnownHosts("/home/praveen//.ssh/known_hosts");
-                }
-            }catch (JSchException j){
-                j.printStackTrace();
-            }
-        }
+        JSch jSch = getJsch(privateKey);
         Session jSchSession = null;
         try {
             jSchSession = jSch.getSession(username, remotehost);
@@ -67,6 +38,56 @@ public class SFTPUtil {
         } catch (JSchException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static ChannelSftp getChanneSftp(String username, String remotehost,int port) {
+        JSch jSch = getJsch(null);
+        Session jSchSession = null;
+        try {
+            jSchSession = jSch.getSession(username, remotehost,port);
+            jSchSession.setConfig("StrictHostKeyChecking", "no");
+            jSchSession.connect();
+            return (ChannelSftp) jSchSession.openChannel(PROTOCOL);
+        } catch (JSchException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static ChannelSftp getChanneSftp(String username, String remotehost,String privatekey,int port) {
+        JSch jSch = getJsch(privatekey);
+        Session jSchSession = null;
+        try {
+            jSchSession = jSch.getSession(username, remotehost,port);
+            jSchSession.setConfig("StrictHostKeyChecking", "no");
+            jSchSession.connect();
+            return (ChannelSftp) jSchSession.openChannel(PROTOCOL);
+        } catch (JSchException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private static JSch getJsch(String privateKey){
+        JSch jSch = new JSch();
+        String known_hosts=System.getProperty("knownHosts");
+        if(known_hosts==null||"".equals(known_hosts)) {
+            String os = System.getProperty("os.name");
+            String userhome=System.getProperty("user.home");
+            try {
+                if (os.contains("Windows")) {
+                    String keyFile=(privateKey==null||"".equals(privateKey))?userhome+"\\.ssh\\id_rsa":privateKey;
+                    jSch.addIdentity(keyFile);
+                    jSch.setKnownHosts("C:\\Users\\Praveen\\.ssh\\known_hosts");
+                }
+                else if (os.contains("linux")) {
+                    String keyFile=(privateKey==null||"".equals(privateKey))?"/.ssh/id_rsa":privateKey;
+                    jSch.addIdentity(privateKey);
+                    jSch.setKnownHosts("/home/praveen/.ssh/known_hosts");
+                }
+            }catch (JSchException j ){
+                j.printStackTrace();
+            }
+        }
+        return jSch;
     }
 
     private static String getPrivateKey(String privateKeyFile) throws IOException {

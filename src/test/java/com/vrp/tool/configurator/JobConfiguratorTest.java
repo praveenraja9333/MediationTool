@@ -35,15 +35,15 @@ class JobConfiguratorTest {
     @Test
     void installJobs(){
         assertEquals(1,jobServiceFactory.getInstalledJobs().size());
-        Job job = JobBuilder.newBuilder().setDstIP("127.0.0.1").setDstPort("1111").setNode(jobServiceFactory.getInstalledNodes()
-                .get("LTECSS3_1")).setProtocol("sftp").setUserName("Praveen").setCron("0 0/3 * * * ?").setJobid(1).build();
+        Job job = JobBuilder.newBuilder().setDstIP("192.168.56.11").setDstPort("22").setNode(jobServiceFactory.getInstalledNodes()
+                .get("LTECSS3_1")).setProtocol("sftp").setUserName("praveen").setCron("0 0/3 * * * ?").setJobid(1).build();
         assertTrue(jobServiceFactory.getInstalledJobs().contains(job));
     }
     @Test
     void installJobs_cronPatterns(){
         assertEquals(1,jobServiceFactory.getInstalledJobs().size());
-        Job job = JobBuilder.newBuilder().setDstIP("127.0.0.1").setDstPort("1111").setNode(jobServiceFactory.getInstalledNodes()
-                .get("LTECSS3_1")).setProtocol("sftp").setUserName("Praveen").setCron("0 0/3 * * * ?").setJobid(1).build();
+        Job job = JobBuilder.newBuilder().setDstIP("192.168.56.11").setDstPort("22").setNode(jobServiceFactory.getInstalledNodes()
+                .get("LTECSS3_1")).setProtocol("sftp").setUserName("praveen").setCron("0 0/3 * * * ?").setJobid(1).build();
         assertTrue(jobServiceFactory.getInstalledJobs().contains(job));
     }
 }

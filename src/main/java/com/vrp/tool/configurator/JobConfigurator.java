@@ -112,6 +112,7 @@ public class JobConfigurator {
         String portocol=requireNonNull(fields[4]);
         String nodeNames=requireNonNull(fields[5]);
         String cronexpression=requireNonNull(fields[6]).replace('.',',');
+        String key=fields.length==8?fields[7]:null;
 
 
         if(!IPPATTERN.matcher(dstIP).matches()){
@@ -132,7 +133,7 @@ public class JobConfigurator {
                 continue;
             }
             Job job = JobBuilder.newBuilder().setDstIP(dstIP).setDstPort(dstPort).setNode(serviceFactory.getInstalledNodes()
-                    .get(nodeName)).setProtocol(portocol).setUserName(username).setCron(cronexpression).setJobid(Integer.parseInt(id)).build();
+                    .get(nodeName)).setProtocol(portocol).setUserName(username).setCron(cronexpression).setKey(key).setJobid(Integer.parseInt(id)).build();
             jobPublisher.published(job);
         }
 

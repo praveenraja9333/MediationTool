@@ -3,9 +3,14 @@ package com.vrp.tool.models;
 import java.util.Objects;
 
 public class Node {
-         String name;
+        private  String name;
          String srcDirectory;
          String dstDirectory;
+
+         String fileregex;
+
+         int maxworkers;
+
 
     public String getName() {
         return name;
@@ -29,6 +34,22 @@ public class Node {
 
     public void setDstDirectory(String dstDirectory) {
         this.dstDirectory = dstDirectory;
+    }
+
+    public String getFileregex() {
+        return fileregex;
+    }
+
+    public void setFileregex(String fileregex) {
+        this.fileregex = fileregex;
+    }
+
+    public int getMaxworkers() {
+        return maxworkers;
+    }
+
+    public void setMaxworkers(int maxworkers) {
+        this.maxworkers = maxworkers;
     }
 
     @Override

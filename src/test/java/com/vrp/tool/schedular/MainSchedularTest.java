@@ -1,6 +1,7 @@
 package com.vrp.tool.schedular;
 
 import com.vrp.tool.models.File;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,12 +13,15 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@SpringBootTest
-@Import(Configuration1.class)
-class MainSchedularTest {
 
-    @Autowired
-    MainSchedular mainSchedular;
+//@Import(Configuration1.class)
+class MainSchedularTest {
+    static MainSchedular mainSchedular;
+    @BeforeAll
+    public static void setUp(){
+          mainSchedular=new MainSchedular();
+    }
+
 
 
     @Test
