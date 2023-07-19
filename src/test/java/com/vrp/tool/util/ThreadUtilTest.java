@@ -12,6 +12,11 @@ class ThreadUtilTest {
     }
 
     @Test
+    void getThreadCount_one(){
+        assertEquals(1,ThreadUtil.getThreadCount(1));
+    }
+
+    @Test
     void getThreadCount_withsetproperty(){
         System.setProperty("threadperfiles","15");
         assertEquals(1,ThreadUtil.getThreadCount(15));

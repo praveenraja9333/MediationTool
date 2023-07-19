@@ -11,6 +11,8 @@ public class Node {
 
          int maxworkers;
 
+         int maxJobwaitTime;
+
 
     public String getName() {
         return name;
@@ -50,6 +52,14 @@ public class Node {
 
     public void setMaxworkers(int maxworkers) {
         this.maxworkers = maxworkers;
+    }
+
+    public int getMaxJobwaitTime() {
+        return maxJobwaitTime;
+    }
+
+    public void setMaxJobwaitTime(int maxJobwaitTime) {
+        this.maxJobwaitTime = maxJobwaitTime;
     }
 
     @Override

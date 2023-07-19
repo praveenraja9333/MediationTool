@@ -8,6 +8,8 @@ public class NodeBuilder implements Builder<NodeBuilder>{
     String fileregex;
     int maxworkers;
 
+    int maxJobwaitTime;
+
     public NodeBuilder setName(String name) {
         this.name = name;
         return this;
@@ -29,6 +31,10 @@ public class NodeBuilder implements Builder<NodeBuilder>{
 
     public NodeBuilder setFileRegex(int maxworkers) {
         this.maxworkers = maxworkers;
+        return this;
+    }
+    public NodeBuilder setMaxJobWaitTime(int maxJobwaitTime) {
+        this.maxJobwaitTime = maxJobwaitTime;
         return this;
     }
 

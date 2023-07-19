@@ -1,5 +1,6 @@
 {
   "name" : "LTECSS3_1",
-  "srcDirectory" : "dummysrc",
-  "dstDirectory" : "dummydst"
+  "srcDirectory" : "/home/praveen/NodeFiles/LTE3_1",
+  "dstDirectory" : "D:\\SIMTool\\LTE",
+  "fileregex" : ".*\\.txt"
 }

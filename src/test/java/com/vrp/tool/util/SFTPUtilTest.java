@@ -15,7 +15,7 @@ class SFTPUtilTest {
 
     @Test
     public void getChanneSftp_userNameAndremote(){
-        ChannelSftp channelSftp=SFTPUtil.getChanneSftp("praveen","192.168.56.11");
+        ChannelSftp channelSftp=SFTPUtil.getChannelSftp("praveen","192.168.56.11");
         Vector<Object> v= null;
         try {
             channelSftp.connect();
@@ -28,7 +28,7 @@ class SFTPUtilTest {
         assertEquals(12,v.size());
     }
     public void getChanneSftp_key(){
-        ChannelSftp channelSftp=SFTPUtil.getChanneSftp("praveen","192.168.56.11","C:\\Users\\Praveen\\jsch\\id_rsa");
+        ChannelSftp channelSftp=SFTPUtil.getChannelSftp("praveen","192.168.56.11","C:\\Users\\Praveen\\jsch\\id_rsa");
         Vector<Object> v= null;
         try {
             channelSftp.connect();
@@ -42,7 +42,7 @@ class SFTPUtilTest {
     }
     @Test
     public void getChanneSftp_port(){
-        ChannelSftp channelSftp=SFTPUtil.getChanneSftp("praveen","192.168.56.11",22);
+        ChannelSftp channelSftp=SFTPUtil.getChannelSftp("praveen","192.168.56.11",22);
         Vector<Object> v= null;
         try {
             channelSftp.connect();
@@ -57,7 +57,7 @@ class SFTPUtilTest {
 
     @Test
     public void getChanneSftp_portandkey(){
-        ChannelSftp channelSftp=SFTPUtil.getChanneSftp("praveen","192.168.56.11","C:\\Users\\Praveen\\jsch\\id_rsa",22);
+        ChannelSftp channelSftp=SFTPUtil.getChannelSftp("praveen","192.168.56.11","C:\\Users\\Praveen\\jsch\\id_rsa",22);
         Vector<Object> v= null;
         try {
             channelSftp.connect();
@@ -72,7 +72,7 @@ class SFTPUtilTest {
 
     @Test
     public void getChanneSftp_portandkey_withselector(){
-        ChannelSftp channelSftp=SFTPUtil.getChanneSftp("praveen","192.168.56.11","C:\\Users\\Praveen\\jsch\\id_rsa",22);
+        ChannelSftp channelSftp=SFTPUtil.getChannelSftp("praveen","192.168.56.11","C:\\Users\\Praveen\\jsch\\id_rsa",22);
         //Vector<Object> v= null;
         Pattern pattern= Pattern.compile(".*\\.txt");
         final Vector<ChannelSftp.LsEntry> v=new Vector<>();

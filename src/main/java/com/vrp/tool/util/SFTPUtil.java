@@ -1,6 +1,7 @@
 package com.vrp.tool.util;
 
 import com.jcraft.jsch.*;
+import com.vrp.tool.models.Job;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +16,7 @@ public class SFTPUtil {
 
     private SFTPUtil(){}
 
-    public static ChannelSftp getChanneSftp(String username, String remotehost) {
+    public static ChannelSftp getChannelSftp(String username, String remotehost) {
         JSch jSch = getJsch(null);
         Session jSchSession = null;
         try {
@@ -27,7 +28,7 @@ public class SFTPUtil {
             throw new RuntimeException(e);
         }
     }
-    public static ChannelSftp getChanneSftp(String username, String remotehost,String privateKey) {
+    public static ChannelSftp getChannelSftp(String username, String remotehost,String privateKey) {
         JSch jSch = getJsch(privateKey);
         Session jSchSession = null;
         try {
@@ -40,7 +41,16 @@ public class SFTPUtil {
         }
     }
 
-    public static ChannelSftp getChanneSftp(String username, String remotehost,int port) {
+    public static ChannelSftp getChannelSftp(Job job){
+        if(!(job.getKey()==null)&&!"".equals(job.getKey())&&!job.getDstPort().equals("22"))
+            return getChannelSftp(job.getUsername(),job.getDstIP(),job.getKey(),Integer.parseInt(job.getDstPort()));
+        else if(!(job.getKey()==null)&&!"".equals(job.getKey()))
+            return getChannelSftp(job.getUsername(),job.getDstIP(),job.getKey());
+        else
+            return getChannelSftp(job.getUsername(),job.getDstIP());
+    }
+
+    public static ChannelSftp getChannelSftp(String username, String remotehost,int port) {
         JSch jSch = getJsch(null);
         Session jSchSession = null;
         try {
@@ -52,7 +62,7 @@ public class SFTPUtil {
             throw new RuntimeException(e);
         }
     }
-    public static ChannelSftp getChanneSftp(String username, String remotehost,String privatekey,int port) {
+    public static ChannelSftp getChannelSftp(String username, String remotehost,String privatekey,int port) {
         JSch jSch = getJsch(privatekey);
         Session jSchSession = null;
         try {

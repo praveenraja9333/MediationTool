@@ -5,6 +5,7 @@ import com.vrp.tool.models.File;
 import com.vrp.tool.models.Job;
 import com.vrp.tool.service.JobServiceFactory;
 import com.vrp.tool.service.RunnableJob;
+import com.vrp.tool.threads.ThreadDispatcher;
 import jakarta.annotation.PostConstruct;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class MainSchedular  {
     private JobServiceFactory jobServiceFactory;
     @Autowired
     private SchedulerFactory schedularFactory;
+
+    @Autowired
+    private ThreadDispatcher threadDispatcher;
     private Scheduler schedular;
 
     public Map<String, Set<File>>collectedFiles=new ConcurrentHashMap<>();
@@ -47,13 +51,17 @@ public class MainSchedular  {
             collectedFiles.put(job.toString(),set);
             org.quartz.JobDetail jobDetail = JobBuilder.newJob(RunnableJob.class).withIdentity(job.toString(), "group1")
                     .build();
+
             jobDetail.getJobDataMap().put("jobDetail", job);
             jobDetail.getJobDataMap().put("alreadyCollected",set);
             jobDetail.getJobDataMap().put("schedular",schedular);
+            jobDetail.getJobDataMap().put("threadDispatcher",threadDispatcher);
             Trigger trigger = TriggerBuilder.newTrigger().withIdentity(job.toString() + ":t", "group1").startNow()
                     .withSchedule(CronScheduleBuilder.cronSchedule(job.getCronPattern())).build();
+
             try {
                 schedular.scheduleJob(jobDetail, trigger);
+
             } catch (SchedulerException e) {
                 throw new RuntimeException(e);
             }
