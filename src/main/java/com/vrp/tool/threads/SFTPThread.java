@@ -70,7 +70,7 @@ public class SFTPThread extends Thread{
             try {
                 channelSftp= SFTPUtil.getChannelSftp(job);
                 channelSftp.connect();
-                while((f=tobeCollected.poll())!=null){
+                while((f=this.runnableJob.getFile())!=null){
                     channelSftp.get(job.getNode().getSrcDirectory()+"/"+f.getName(),job.getNode().getDstDirectory());
                     f.setId(System.currentTimeMillis());
                     if(this.files.add(f))successcount++;

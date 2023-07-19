@@ -82,33 +82,19 @@ public class RunnableJob implements Job {
         if(job.getNode().getMaxworkers()>0){
             noOfThreads=job.getNode().getMaxworkers()<noOfThreads?job.getNode().getMaxworkers():noOfThreads;
         }
-        //List<SFTPThread> threads=threadDispatcher.consume(noOfThreads);
+        List<SFTPThread> threads=threadDispatcher.consume(noOfThreads);
 
-        List<SFTPThread> threads=threadDispatcher.consume(1);
+        //List<SFTPThread> threads=threadDispatcher.consume(1);
         int sftpthreadsize=threads.size();
         LOG.debug("Number of Workers Threads {} "+threads.size());
         CountDownLatch countDownLatch=new CountDownLatch(threads.size());
-        //files=(LinkedList<File>) filteredFiles;
+        files=(LinkedList<File>) filteredFiles;
         int filesPerBucket=0;
-        if(nooffiles>0&&sftpthreadsize>0){
-            filesPerBucket=nooffiles/sftpthreadsize;
-            LOG.debug("Files partition per thread are {} ",filesPerBucket);
-        }
-        int k=0;
         for(SFTPThread thread:threads){
             thread.setJob(job);
             thread.setFiles(collectedfiles);
             thread.setJob(this);
             thread.setCountDownLatch(countDownLatch);
-            if(++k==sftpthreadsize){
-                while(!filteredFiles.isEmpty()){
-                      thread.tobeCollected.add(filteredFiles.poll());
-                }
-            }else{
-                 for(int z=0;z<filesPerBucket;z++){
-                     thread.tobeCollected.add(filteredFiles.poll());
-                 }
-            }
         }
         boolean failbackMethod=false;
         if(sftpthreadsize==0&&nooffiles>0){
@@ -151,6 +137,10 @@ public class RunnableJob implements Job {
         }
         long finishedTime=System.currentTimeMillis()-startTime;
         LOG.info("Job {} is finished, Time elapsed {} seconds",jobname,Math.floorDiv(finishedTime,60));
+    }
+
+    public synchronized File getFile(){
+           return this.files==null?null:files.poll();
     }
 
 }
