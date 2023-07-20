@@ -12,4 +12,5 @@ public interface RemoteObject extends Remote {
 
     RMIResponse<SessionKey> register(ClientHeaders clientHeaders) throws RemoteException;
     boolean unregister(SessionKey sessionKey) throws RemoteException;
+
 }

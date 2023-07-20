@@ -6,9 +6,13 @@ public class SessionKey implements Serializable {
     private boolean connected;
     private String token;
 
-    public SessionKey(String token,boolean connected){
+    private volatile long lastaccessed;
+    private volatile boolean exit;
+
+    public SessionKey(String token,boolean connected,long time){
         this.connected=connected;
         this.token=token;
+        lastaccessed=time;
     }
 
     public boolean isConnected() {
@@ -25,6 +29,22 @@ public class SessionKey implements Serializable {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public long getLastaccessed() {
+        return lastaccessed;
+    }
+
+    public void setLastaccessed(long lastaccessed) {
+        this.lastaccessed = lastaccessed;
+    }
+
+    public boolean isExit() {
+        return exit;
+    }
+
+    public void setExit(boolean exit) {
+        this.exit = exit;
     }
 
     @Override

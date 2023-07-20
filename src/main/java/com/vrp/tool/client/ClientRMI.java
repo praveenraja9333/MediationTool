@@ -98,7 +98,7 @@ public class ClientRMI {
             RMIResponse<SessionKey> response=remoteObject.register(clientHeaders);
             sessionKey=response.getBody();
             updateLastQueriedTime();
-            if(sessionKey==null)throw new RuntimeException("Session Failed to connect RMI object"+response.getStatus());
+            if(sessionKey==null) {System.out.println("Session Failed to connect RMI object"+response.getStatus());System.exit(200);}
         } catch (NotBoundException e) {
             throw new RuntimeException(e);
         } catch (MalformedURLException e) {

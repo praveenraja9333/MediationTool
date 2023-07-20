@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,9 +24,11 @@ public class AdminRMI extends UnicastRemoteObject implements RemoteObject {
     @Autowired
     private JobServiceFactory jobServiceFactory;
 
+    private int noOfClients=3;
+
     private static Logger LOG= LogManager.getLogger(UnicastRemoteObject.class);
 
-    private volatile long registeredSerialKey=0L;
+    private final Map<String,SessionKey> clients=new HashMap<>();
 
     private volatile boolean exit=false;
 
@@ -33,7 +36,13 @@ public class AdminRMI extends UnicastRemoteObject implements RemoteObject {
 
     private Thread monitorLock= null;
     public AdminRMI() throws RemoteException {
+           String nofclients=System.getProperty("NoOfRMIClients");
+           if(nofclients!=null&&!"".equals(nofclients)){
+               noOfClients=Integer.parseInt(nofclients);
+           }
     }
+
+
 
     @Override
     public Map<String, Node>printHello() {
@@ -49,66 +58,60 @@ public class AdminRMI extends UnicastRemoteObject implements RemoteObject {
     }
 
     @Override
-    public RMIResponse<SessionKey> register(ClientHeaders clientHeaders) throws RemoteException {
-        if(registeredSerialKey==0){
-            this.registeredSerialKey=clientHeaders.getL();
-            this.monitorLock=getThread();
-            this.sessionKey=new SessionKey("Token@"+clientHeaders.getIP()+"@"+clientHeaders.getL(),true);
-            this.monitorLock.start();
+    public synchronized RMIResponse<SessionKey> register(ClientHeaders clientHeaders) throws RemoteException {
+        if(clients.size()<3){
+            SessionKey sessionKey=new SessionKey("Token@"+clientHeaders.getIP()+"@"+clientHeaders.getL(),true,clientHeaders.getL());
+            Timer timer=new Timer();
+            timer.schedule(getTimerTask(sessionKey),10000L);
+            clients.put(sessionKey.getToken(),sessionKey);
             return new RMIResponse<>(sessionKey,clientHeaders,"Success");
         }
-        return new RMIResponse<>(null,clientHeaders," there is an active session from IP"+(sessionKey!=null?sessionKey.getToken().split("@")[1]:null)+
-                " time out remaining "+(300-(((System.currentTimeMillis()-registeredSerialKey) / 60) / 60)));
+        String status="Reached Max no of clients "+noOfClients+" Allowed, Please find the active session below";
+        for(SessionKey _sessionKey:clients.values()){
+            status +=" there is an active session from IP"+(_sessionKey!=null?_sessionKey.getToken().split("@")[1]:null)+
+                    " time out remaining "+(300-(((System.currentTimeMillis()- _sessionKey.getLastaccessed()) / 60) / 60))
+            +"\n";
+
+        }
+        return new RMIResponse<>(null,clientHeaders,status);
     }
 
     @Override
     public boolean unregister(SessionKey sessionKey) throws RemoteException{
         if(validateSessionKey(sessionKey)){
-            this.exit=true;
-            try {
-                this.monitorLock.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }finally {
-                this.sessionKey=null;
-            }
-            return true;
+            this.clients.remove(sessionKey.getToken());
         }
         return false;
     }
 
-    public boolean getHeartBeat(SessionKey sessionKey) throws RemoteException{
-        if(validateSessionKey(sessionKey)){
-            registeredSerialKey=System.currentTimeMillis();
-            return true;
-        }
-        return false;
 
-    }
 
-    private Thread getThread() {
-        return new Thread(()->{
 
-            while(true) {
-                try {
-                    if ((((System.currentTimeMillis()-this.registeredSerialKey) / 60) / 60) > 300||exit) {
-                        exit=false;
-                        break;
+
+    private TimerTask getTimerTask(SessionKey sessionKey) {
+        return new TimerTask() {
+
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        if ((((System.currentTimeMillis() - sessionKey.getLastaccessed()) / 60) / 60) > 300 || sessionKey.isExit()) {
+                            break;
+                        }
+                        LOG.info("Session acquired by the " + sessionKey.getToken());
+                        TimeUnit.SECONDS.sleep(30);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
-                    LOG.info("Session acquired by the "+this.sessionKey.getToken());
-                    TimeUnit.SECONDS.sleep(30);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
                 }
+               clients.remove(sessionKey.getToken());
+
             }
-            if (Long.compare(this.registeredSerialKey, 0)!=0) {
-                this.registeredSerialKey = 0L;
-            }
-        });
+        };
     }
 
     private boolean validateSessionKey(SessionKey sessionKey){
-        return this.sessionKey!=null&&this.sessionKey.equals(sessionKey);
+        return this.clients.values().contains(sessionKey);
     }
 
 }
