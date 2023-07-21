@@ -1,6 +1,8 @@
 package com.vrp.tool.models;
 
-public class Job {
+import java.io.Serializable;
+
+public class Job implements Serializable {
     int jobid;
     String username;
     String dstIP;
@@ -79,7 +81,7 @@ public class Job {
     @Override
     public String toString(){
         return jobid+ ":"+
-                dstIP+":"+dstPort+":"+node.getName();
+                dstIP+":"+dstPort+":"+node.getName()+":"+cronPattern;
     }
 
     @Override

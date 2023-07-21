@@ -1,8 +1,9 @@
 package com.vrp.tool.models;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Node {
+public class Node implements Serializable {
         private  String name;
          String srcDirectory;
          String dstDirectory;
@@ -75,5 +76,17 @@ public class Node {
     @Override
     public int hashCode() {
         return name.hashCode();
-    } 
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "name='" + name + '\'' +
+                ", srcDirectory='" + srcDirectory + '\'' +
+                ", dstDirectory='" + dstDirectory + '\'' +
+                ", fileregex='" + fileregex + '\'' +
+                ", maxworkers=" + maxworkers +
+                ", maxJobwaitTime=" + maxJobwaitTime +
+                '}';
+    }
 }

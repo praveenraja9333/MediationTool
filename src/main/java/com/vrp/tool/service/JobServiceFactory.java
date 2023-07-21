@@ -6,14 +6,16 @@ import com.vrp.tool.models.Node;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Component
 public class JobServiceFactory {
 
-    private Map<String, Node> installedNodes = new HashMap<>();
-    private Set<Job> installedJobs = new HashSet<>();
+    private final Map<String, Node> installedNodes = new ConcurrentHashMap<>();
+    private final Set<Job> installedJobs = new HashSet<>();
 
-    private List<Listener> subscribers = new LinkedList<>();
+    private final List<Listener> subscribers = new LinkedList<>();
 
     public Subscriber subscriber = new Subscriber();
 
@@ -44,6 +46,7 @@ public class JobServiceFactory {
         @Override
         public void onRemove(Node node) {
             installedNodes.remove(node.getName(), node);
+            jobsListener.onRemove(installedJobs.stream().filter(i->node.equals(i.getNode())).collect(Collectors.toList()));
         }
 
         @Override
@@ -66,21 +69,27 @@ public class JobServiceFactory {
         }
 
         @Override
-        public void onRemove(Job node) {
-            installedJobs.remove(node);
-            //removeJob
+        public void onRemove(Job job) {
+            installedJobs.remove(job);
+            for(Listener listener:subscribers){
+                listener.onRemove(job);
+            }
         }
 
         @Override
-        public void onPublish(List<Job> T) {
-            installedJobs.addAll(T);
+        public void onPublish(List<Job> jobs) {
+            installedJobs.addAll(jobs);
             //removeJobs
         }
 
         @Override
-        public void onRemove(List<Job> T) {
-            installedJobs.removeAll(T);
-            //removeJobs
+        public void onRemove(List<Job> jobs) {
+            installedJobs.removeAll(jobs);
+            for (Job _job : jobs){
+                for (Listener listener : subscribers) {
+                    listener.onRemove(_job);
+                }
+            }
         }
     };
 }

@@ -8,11 +8,13 @@ import com.vrp.tool.service.RunnableJob;
 import com.vrp.tool.threads.ThreadDispatcher;
 import jakarta.annotation.PostConstruct;
 import org.quartz.*;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Component
 public class MainSchedular  {
@@ -63,12 +65,22 @@ public class MainSchedular  {
                 schedular.scheduleJob(jobDetail, trigger);
 
             } catch (SchedulerException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
 
         @Override
         public void onRemove(Job job) {
+            try {
+                Set<JobKey> jobkeys=schedular.getJobKeys(GroupMatcher.groupEquals("group1")).stream()
+                        .filter(j->j.getName().equals(job.toString())).collect(Collectors.toSet());
+                for(JobKey jobkey:jobkeys){
+                        schedular.deleteJob(jobkey);
+                }
+
+            } catch (SchedulerException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -83,4 +95,7 @@ public class MainSchedular  {
         }
     } ;
 
+    public Scheduler getSchedular() {
+        return schedular;
+    }
 }

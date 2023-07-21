@@ -146,5 +146,20 @@ public class JobConfigurator {
         return readcount==-1?"":new String(Arrays.copyOf(bytes,readcount));
     }
 
+    public void removeNode(Node node){
+        nodePublisher.removed(node);
+    }
+
+    public void removeJob(Job job){
+        jobPublisher.removed(job);
+    }
+
+
+    public void reinstallJobs(){
+        String installFile=System.getProperty("jobinstalltextFile");
+        installFile=(installFile==null||"".equals(installFile))?"C:\\Users\\Praveen\\Downloads\\tool\\.tool\\sample.txt":installFile;
+        parseJobs(installFile);
+    }
+
     
 }

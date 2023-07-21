@@ -7,6 +7,8 @@ public class RMIResponse <V> implements Serializable {
     V body;
 
     String status;
+
+    public RMIResponse(){}
     public  RMIResponse(V body,ClientHeaders clientHeaders,String status){
           this.body=body;
           this.clientHeaders=clientHeaders;
@@ -21,7 +23,14 @@ public class RMIResponse <V> implements Serializable {
         return body;
     }
 
+    public void setBody(V body){
+        this.body=body;
+    }
+
     public String getStatus() {
         return status;
+    }
+    public void setStatus(String status){
+        this.status=status;
     }
 }
