@@ -15,22 +15,26 @@ function help(){
 
 }
 #---Main start Here
-if [ $@ -gt 0 ]; then
-    while $@ -gt 0; do
-        case EXPRESSION in
-            '-maxThread')
+if [ $# -gt 0 ]; then
+    while [ $# -gt 0 ]; do
+        case $1 in
+            -maxThread)
                 shift
+                echo "Wrong arguments types == $1"
                 maxThread=$1;
                 shift
+		        break
                 ;;
-            '-configFile')
+            -configFile)
                 shift
                 jobconfigFile=$1
                 shift
+		        break
                 ;;
-            '-h')
+            -h)
                 help
                 shift
+		        break
                 ;;
             *)
                 echo "Wrong arguments types"
