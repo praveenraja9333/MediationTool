@@ -25,8 +25,8 @@ public class Application implements CommandLineRunner {
 		   jobConfigurator.addSubscribers();
 		  //jobConfigurator.installNode("/Users/praveenrajendran/Downloads/MediationTool/smaple.json");
 		  //jobConfigurator.parseJobs("/Users/praveenrajendran/Downloads/MediationTool/sample.txt");
-		jobConfigurator.installNode("C:\\Users\\Praveen\\Downloads\\tool\\.tool\\smaple.json");
-		jobConfigurator.parseJobs("C:\\Users\\Praveen\\Downloads\\tool\\.tool\\sample.txt");
+		//jobConfigurator.installNode("C:\\Users\\Praveen\\Downloads\\tool\\.tool\\smaple.json");
+		//jobConfigurator.parseJobs("C:\\Users\\Praveen\\Downloads\\tool\\.tool\\sample.txt");
 		LocateRegistry.createRegistry(2001);
 		Naming.rebind("rmi://localhost:2001/admin",adminRMI);
 	}

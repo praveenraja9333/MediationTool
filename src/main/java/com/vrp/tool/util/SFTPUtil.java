@@ -22,7 +22,7 @@ public class SFTPUtil {
         try {
             jSchSession = jSch.getSession(username, remotehost);
             jSchSession.setConfig("StrictHostKeyChecking", "no");
-            jSchSession.connect();
+            jSchSession.connect(3000);
             return (ChannelSftp) jSchSession.openChannel(PROTOCOL);
         } catch (JSchException e) {
             throw new RuntimeException(e);

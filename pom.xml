@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.vrp</groupId>
-	<artifactId>.tool</artifactId>
+	<artifactId>tool</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Mediation</name>
@@ -122,6 +122,43 @@
 						${project.basedir}/build/libs
 					</outputDirectory>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<copy file="${project.basedir}/run.sh" tofile="${project.basedir}/build/run.sh"/>
+								<copy file="${project.basedir}/runClient.sh" tofile="${project.basedir}/build/runClient.sh"/>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.5.2</version>
+				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
+					<finalName>MediationTool</finalName>
+					<descriptors>
+						<descriptor>${project.basedir}/assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>create-archive</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
