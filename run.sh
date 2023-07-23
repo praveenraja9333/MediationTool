@@ -20,21 +20,17 @@ if [ $# -gt 0 ]; then
         case $1 in
             -maxThread)
                 shift
-                echo "Wrong arguments types == $1"
                 maxThread=$1;
                 shift
-		        break
                 ;;
             -configFile)
                 shift
                 jobconfigFile=$1
                 shift
-		        break
                 ;;
             -h)
                 help
                 shift
-		        break
                 ;;
             *)
                 echo "Wrong arguments types"
