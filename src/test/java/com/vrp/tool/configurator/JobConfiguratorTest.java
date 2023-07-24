@@ -26,7 +26,7 @@ class JobConfiguratorTest {
     }
     @Test
     void installNode(){
-       // jobConfigurator.installNode("/Users/praveenrajendran/Downloads/MediationTool/smaple.json");
+       // jobConfigurator.installNode("/Users/praveenrajendran/Downloads/MediationTool/sample.json");
         assertEquals(1,jobServiceFactory.getInstalledNodes().size());
         assertTrue(jobServiceFactory.getInstalledNodes().values().contains(NodeBuilder.newBuilder().setName("LTECSS3_1").build()));
     }
