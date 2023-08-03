@@ -1,7 +1,7 @@
 
 **Note:** - This software is a demonstration and for educational purposes only.
 
-This is the POC for the Highly concurrent, low GC Mediation tool. currently, for the POC only SFTP is considered.
+This is the POC for the Highly concurrent, low GC Mediation tool. currently, for this POC only SFTP is considered.
 
 **create package**
 mvn package
