@@ -6,7 +6,7 @@ pipeline{
   stages{
     stage('test'){
       steps{
-        echo "hello mc-pipe"
+        echo "hello mc-pipe ${params.gitlabSourceBranch}"
       }
     }
   }
