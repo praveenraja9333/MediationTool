@@ -8,7 +8,7 @@ pipeline{
     stage('test'){
       when {
         allOf{
-          expression { $(params.CREATE_RELEASE) }
+          expression { params.CREATE_RELEASE }
           branch 'master'
         }
       }
