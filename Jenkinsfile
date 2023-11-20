@@ -7,7 +7,10 @@ pipeline{
   stages{
     stage('test'){
       when {
-        $(params.CREATE_RELEASE)
+        allof{
+          expression { $(params.CREATE_RELEASE)
+          branch master
+        }
       }
       steps{
         //setupGit gitUrl: 'git@github.com:praveenraja9333/MediationTool.git' gitBranch: "${params.gitlabSourceBranch}"
