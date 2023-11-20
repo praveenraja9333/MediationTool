@@ -9,7 +9,7 @@ pipeline{
       when {
         allOf{
           expression { $(params.CREATE_RELEASE) }
-          branch master
+          branch 'master'
         }
       }
       steps{
